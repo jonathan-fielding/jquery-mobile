@@ -6,49 +6,136 @@ $files = array(
 	// to revert to the pre async include, and should not be
 	// used in other build methods
 	'jquery.mobile.define.js',
+	'jquery.mobile.ns.js',
 	'jquery.ui.widget.js',
 	'jquery.mobile.widget.js',
 	'jquery.mobile.media.js',
+	'jquery.mobile.support.touch.js',
+	'jquery.mobile.support.orientation.js',
 	'jquery.mobile.support.js',
 	'jquery.mobile.vmouse.js',
-	'jquery.mobile.event.js',
+	'events/touch.js',
+	'events/throttledresize.js',
+	'events/orientationchange.js',
 	'jquery.hashchange.js',
-	'jquery.mobile.page.js',
-	'jquery.mobile.core.js',
+	'jquery.ui.core.js',
+	'jquery.mobile.defaults.js',
+	'jquery.mobile.helpers.js',
+	'jquery.mobile.data.js',
+	'widgets/page.js',
+	'widgets/page.dialog.js',
+	'widgets/loader.js',
+	'events/navigate.js',
+	'navigation/path.js',
+	'navigation/base.js',
+	'navigation/history.js',
+	'navigation/navigator.js',
+	'navigation/method.js',
+	'widgets/pagecontainer.js',
 	'jquery.mobile.navigation.js',
-	'jquery.mobile.navigation.pushstate.js',
-	'jquery.mobile.transition.js',
-	'jquery.mobile.transition.pop.js',
-	'jquery.mobile.transition.slide.js',
-	'jquery.mobile.transition.slidedown.js',
-	'jquery.mobile.transition.slideup.js',
-	'jquery.mobile.transition.flip.js',
-	'jquery.mobile.transition.flow.js',
-	'jquery.mobile.transition.turn.js',
+	'transitions/transition.js',
+	'transitions/serial.js',
+	'transitions/concurrent.js',
+	'transitions/handlers.js',
+	'transitions/visuals/pop.js',
+	'transitions/visuals/slide.js',
+	'transitions/visuals/slidefade.js',
+	'transitions/visuals/slidedown.js',
+	'transitions/visuals/slideup.js',
+	'transitions/visuals/flip.js',
+	'transitions/visuals/flow.js',
+	'transitions/visuals/turn.js',
 	'jquery.mobile.degradeInputs.js',
-	'jquery.mobile.dialog.js',
-	'jquery.mobile.page.sections.js',
-	'jquery.mobile.collapsible.js',
-	'jquery.mobile.collapsibleSet.js',
+	'widgets/dialog.js',
+	'widgets/collapsible.js',
+	'widgets/addFirstLastClasses.js',
+	'widgets/collapsibleSet.js',
 	'jquery.mobile.fieldContain.js',
 	'jquery.mobile.grid.js',
-	'jquery.mobile.navbar.js',
-	'jquery.mobile.listview.js',
-	'jquery.mobile.listview.filter.js',
+	'widgets/navbar.js',
+	'widgets/listview.js',
+	'widgets/listview.autodividers.js',
+	'widgets/listview.hidedividers.js',
 	'jquery.mobile.nojs.js',
-	'jquery.mobile.forms.checkboxradio.js',
-	'jquery.mobile.forms.button.js',
-	'jquery.mobile.forms.slider.js',
-	'jquery.mobile.forms.textinput.js',
-	'jquery.mobile.forms.select.custom.js',
-	'jquery.mobile.forms.select.js',
+	'widgets/forms/reset.js',
+	'widgets/forms/checkboxradio.js',
+	'widgets/forms/button.js',
+	'widgets/forms/flipswitch.js',
+	'widgets/forms/slider.js',
+	'widgets/forms/slider.tooltip.js',
+	'widgets/forms/rangeslider.js',
+	'widgets/forms/textinput.js',
+	'widgets/forms/clearButton.js',
+	'widgets/forms/autogrow.js',
+	'widgets/forms/select.js',
+	'widgets/forms/select.custom.js',
+	'widgets/filterable.js',
+	'widgets/filterable.backcompat.js',
 	'jquery.mobile.buttonMarkup.js',
-	'jquery.mobile.controlGroup.js',
+	'widgets/controlgroup.js',
 	'jquery.mobile.links.js',
-	'jquery.mobile.fixedToolbar.js',
+	'widgets/toolbar.js',
+	'widgets/fixedToolbar.js',
+	'widgets/fixedToolbar.workarounds.js',
+	'widgets/panel.js',
+	'widgets/popup.js',
+	'widgets/popup.arrow.js',
+	'widgets/table.js',
+	'widgets/table.columntoggle.js',
+	'widgets/table.reflow.js',
+	'widgets/jquery.ui.tabs.js',
+	'widgets/tabs.js',
 	'jquery.mobile.zoom.js',
 	'jquery.mobile.zoom.iosorientationfix.js',
 	'jquery.mobile.init.js'
 );
+
+function getGitHeadPath() {
+	$gitRoot = "../";
+	$gitDir = ".git";
+	$path = $gitRoot . $gitDir;
+
+	if ( is_file( $path ) && is_readable( $path ) ) {
+		$contents = file_get_contents( $path );
+		if ( $contents ) {
+			$contents = explode( " ", $contents );
+			if ( count( $contents ) > 1 ) {
+				$contents = explode( "\n", $contents[ 1 ] );
+				if ( $contents && count( $contents ) > 0 ) {
+					$path = $gitRoot . $contents[ 0 ];
+				}
+			}
+		}
+	}
+
+	return $path . "/logs/HEAD";
+}
+
+function getCommitId() {
+	$gitHeadPath = getGitHeadPath();
+
+	if ( $gitHeadPath ) {
+		$logs = ( is_readable( $gitHeadPath ) ? file_get_contents( $gitHeadPath ) : false );
+		if ( $logs ) {
+			$logs = explode( "\n", $logs );
+			$n_logs = count( $logs );
+			if ( $n_logs > 1 ) {
+				$log = explode( " ", $logs[ $n_logs - 2 ] );
+				if ( count( $log ) > 1 ) {
+					return $log[ 1 ];
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+$comment = getCommitId();
+if ( !$comment ) {
+	unset( $comment );
+} else {
+	$comment = "/* git commitid " . $comment . " */\n";
+}
 
 require_once('../combine.php');

@@ -5,15 +5,20 @@
 	<title>jQuery Mobile Checkboxradio Test Suite</title>
 
 	<script src="../../../external/requirejs/require.js"></script>
+	<script src="../../../js/requirejs.config.js"></script>
 	<script src="../../../js/jquery.tag.inserter.js"></script>
-	<script src="../jquery.setNameSpace.js"></script>
+	<script src="../../jquery.setNameSpace.js"></script>
 	<script src="../../../tests/jquery.testHelper.js"></script>
 	<script src="../../../external/qunit.js"></script>
 	<script>
 		$.testHelper.asyncLoad([
+			[ "widgets/page" ],
 			[
-				"jquery.mobile.forms.checkboxradio",
-				"jquery.mobile.page" // Needed by the test suite
+				"widgets/controlgroup",
+			],
+			[
+				"widgets/forms/checkboxradio",
+				"widgets/page" // Needed by the test suite
 			],
 			[
 				"checkboxradio_core.js"
@@ -25,7 +30,7 @@
 	<link rel="stylesheet"  href="../../../css/themes/default/jquery.mobile.css"/>
 	<link rel="stylesheet" href="../../../external/qunit.css"/>
 
-	<script src="../swarminject.js"></script>
+	<script src="../../swarminject.js"></script>
 </head>
 <body>
 
@@ -35,8 +40,26 @@
 <ol id="qunit-tests">
 </ol>
 
-<div data-nstest-role="page" data-nstest-theme="a">
-	<div data-nstest-role="content">
+<div data-nstest-role="page" data-nstest-theme="b">
+	<div data-nstest-role="content" id="the-content">
+
+		<input type="checkbox" id="chk['3']-1"></input>
+		<label for="chk['3']-1">Checkbox label</label>
+
+		<div data-nstest-role="controlgroup" id="manual-set-horizontal" data-nstest-type="horizontal">
+			<input type="checkbox" name="manual-set-horizontal-1" id="manual-set-horizontal-1" />
+			<label for="manual-set-horizontal-1">Manual Set Horizontal 1</label>
+		</div>
+
+		<div data-nstest-role="controlgroup" id="manual-set-vertical">
+			<input type="checkbox" name="manual-set-vertical-1" id="manual-set-vertical-1" />
+			<label for="manual-set-vertical-1">Manual Set Vertical 1</label>
+		</div>
+
+		<div data-nstest-role="controlgroup" id="set-vertical-group" data-nstest-type="horizontal">
+			<input type="checkbox" name="set-vertical-group-1" id="set-vertical-group-1" />
+			<label for="set-vertical-group-1">Set Vertical 1</label>
+		</div>
 
 		<div data-nstest-role="fieldcontain">
 			<fieldset data-nstest-role="controlgroup">

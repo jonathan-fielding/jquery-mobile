@@ -3,21 +3,35 @@
 //>>label: Link Classes
 //>>group: Utilities
 
-
-define( [ "jquery" ], function( $ ) {
+define( [ "jquery",
+	"./jquery.mobile.core",
+	"./navigation/path" ], function( jQuery ) {
 //>>excludeEnd("jqmBuildExclude");
 (function( $, undefined ) {
 
-$( document ).bind( "pagecreate create", function( e ){
+$.mobile.links = function( target ) {
 
 	//links within content areas, tests included with page
-	$( e.target )
+	$( target )
 		.find( "a" )
 		.jqmEnhanceable()
-		.not( ".ui-btn, .ui-link-inherit, :jqmData(role='none'), :jqmData(role='nojs')" )
+		.filter( ":jqmData(rel='popup')[href][href!='']" )
+		.each( function() {
+			// Accessibility info for popups
+			var element = this,
+				idref = element.getAttribute( "href" ).substring( 1 );
+
+			if ( idref ) {
+				element.setAttribute( "aria-haspopup", true );
+				element.setAttribute( "aria-owns", idref );
+				element.setAttribute( "aria-expanded", false );
+			}
+		})
+		.end()
+		.not( ".ui-btn, :jqmData(role='none'), :jqmData(role='nojs')" )
 		.addClass( "ui-link" );
 
-});
+};
 
 })( jQuery );
 

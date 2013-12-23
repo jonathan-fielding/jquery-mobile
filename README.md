@@ -1,113 +1,128 @@
-jQuery Mobile Framework
-=======================
-[Official Site: http://jquerymobile.com](http://jquerymobile.com)
+# jQuery Mobile [![Build Status](https://travis-ci.org/jquery/jquery-mobile.png?branch=master)](https://travis-ci.org/jquery/jquery-mobile)
 
-[Demos and Documentation](http://jquerymobile.com/test/)
+This is the main repository for the jQuery Mobile project. From the [official website](http://jquerymobile.com):
 
-How to build your own jQuery Mobile CSS and JS files
-====================================================
-Clone this repo and build the js and css files (you'll need Git and Make installed):
+> A unified, HTML5-based user interface system for all popular mobile device platforms, built on the rock-solid jQuery and jQuery UI foundation. Its lightweight code is built with progressive enhancement, and has a flexible, easily themeable design.
 
-    git clone git://github.com/jquery/jquery-mobile.git
-    cd jquery-mobile
-    make
+jQuery Mobile 1.3 (1.3.2) works with versions of jQuery core from 1.7.0 to 1.9.1. You can find more information about how the library works, and what it is capable of, by reading the [documentation](http://api.jquerymobile.com) and exploring the [demos](http://view.jquerymobile.com/1.3.2/dist/demos/).
 
-A full version and a minified version of the jQuery Mobile JavaScript and CSS files will be created
-in a folder named "compiled". There is also now a Structure only css file so you can add your own theme on top of it.
+## Contributing
 
-How to build a self-contained version of the Docs/Demos
-=======================================================
-Once you have your own cloned repo on your computer:
-
-    make docs
-
-The docs will be built and available in the compiled/demos folder. You can move this folder to your web server or
-other location. It has no dependencies on anything other than a basic HTML web server.
+You can contribute to the project by reporting issues, suggesting new features, or submitting pull requests.
+Please read our [Contributing Guidelines](https://github.com/jquery/jquery-mobile/blob/master/CONTRIBUTING.md) before submitting.
 
 
-Submitting bugs
-===============
-If you think you've found a bug, please report it by following these instructions:
+## Build/Customization
 
-1. Visit the [Issue tracker: https://github.com/jquery/jquery-mobile/issues](https://github.com/jquery/jquery-mobile/issues)
-2. Create an issue explaining the problem and expected result
-    - Be sure to include any relevant information for reproducing the issue
-    - Include information such as:
-        * Browser/device (with version #)
-        * The version of the jQuery Mobile code you're running
-        * If you are running from a git version, include the date and/or hash number
-    - Make sure that the bug still exists at http://jquerymobile.com/test/ as it may be fixed already
-    - You can use the CDN hosted JS and CSS files to test in your own code by using:
-        * [JS](http://code.jquery.com/mobile/latest/jquery.mobile.min.js)
-        * [CSS](http://code.jquery.com/mobile/latest/jquery.mobile.min.css)
-    - Include a link to some code of the bug in action. You can use either of these services to host your code
-        * [jsbin](http://jsbin.com)
-        * [jsfiddle](http://jsfiddle.net)
-3. Submit the issue.
+Currently the library is shipped on the jQuery CDN/download as a single monolithic JavaScript file that depends on jQuery Core (not included) and a similarly bundled CSS file. For users we support the following build targets:
 
-Recommended: [JS Bin issue template with instructions](http://jsbin.com/omacox/edit)
+* `js` - resolve dependencies, build, concat, and minify the JavaScript used for jQuery Mobile
+* `css` - resolve dependencies, build, concat, and minify all the css, just the structure css, and just the theme css
+* `demos` - build the js and css, and make the docs ready for static consumption
+* `zip` - package all the JavaScript and all the css into a zip archive
+* `dist` (default target) - all of the above
+* `lint` - Validates JavaScript files using [JSHint](http://jshint.com/)
 
-Issues concerning the jQuery Mobile Theme Roller can be submitted at the [Theme Roller repo: https://github.com/jquery/web-jquery-mobile-theme-roller](https://github.com/jquery/web-jquery-mobile-theme-roller)
+### Download Builder
 
-Submitting patches
-==================
-To contribute code and bug fixes to jQuery Mobile: fork this project on Github, make changes to the code in your fork,
-and then send a "pull request" to notify the team of updates that are ready to be reviewed for inclusion.
+The easiest way to obtain a custom build is to use the [download builder](http://jquerymobile.com/download-builder/). With it, you can select the parts of the library you need and both the CSS and JavaScript dependencies will be resolved for you as a packaged/minified whole.
 
-Detailed instructions can be found at [jQuery Mobile Patching](https://gist.github.com/1294035)
+### Requirements
 
-Running the jQuery Mobile demos & docs locally
-==============================================
-To preview locally, you'll need to clone a local copy of this repository and point your Apache & PHP webserver at its
-root directory (a webserver is required, as PHP and .htaccess are used for combining development files).
+* [Node.js](http://nodejs.org/) ~0.8.22
+* [Grunt](http://gruntjs.com/) >=0.4.0
 
-If you don't currently have a webserver running locally, there are a few options.
+### Commands
 
-If you're on a Mac, you can try dropping jQuery Mobile into your sites folder and turning on Web Sharing via System
-Prefs. From there, you'll find a URL where you can browse folders in your sites directory from a browser.
+With node and grunt installed you can run the default target by simply issuing the following from the project root:
 
-Another quick way to get up and running is to download and install MAMP for Mac OSX. Once installed, just open MAMP,
-click preferences, go to the Apache tab, and select your local jQuery Mobile folder as the root. Then you can open a
-browser to http://localhost:8888 to preview the code.
+    npm install
+    grunt
 
-Another alternative is XAMPP (Mac, Windows). You need to actually modify Apache's httpd.conf to point to your checkout:
-[Instructions](http://www.apachefriends.org/en/xampp.html)
+### JavaScript
 
-You need the following Apache modules loaded:
+As of version 1.1 the library uses dependency management in the JavaScript build by providing [AMD modules](https://github.com/amdjs/amdjs-api/wiki/AMD) which can be added or removed from the core mobile meta module `js/jquery.mobile.js`.
+
+For example, if a user wished to exclude the form widgets to reduce the wire weight of their jQuery Mobile include they would first remove them from the meta module:
+
+```diff
+diff --git a/js/jquery.mobile.js b/js/jquery.mobile.js
+index 6200fe6..3a4625c 100644
+--- a/js/jquery.mobile.js
++++ b/js/jquery.mobile.js
+@@ -19,12 +19,6 @@ define([
+        './jquery.mobile.listview.filter',
+        './jquery.mobile.listview.autodividers',
+        './jquery.mobile.nojs',
+-       './jquery.mobile.forms.checkboxradio',
+-       './jquery.mobile.forms.button',
+-       './jquery.mobile.forms.slider',
+-       './jquery.mobile.forms.textinput',
+-       './jquery.mobile.forms.select.custom',
+-       './jquery.mobile.forms.select',
+        './jquery.mobile.buttonMarkup',
+        './jquery.mobile.controlGroup',
+        './jquery.mobile.links',
+```
+
+And then run the build:
+
+    grunt js
+
+### CSS
+
+To create a new theme:
+
+1. Copy the `default` folder from CSS/Themes to a new folder named after your new theme (eg, `my-theme`).
+2. Add customizations to the `jquery.mobile.theme.css` file.
+3. From the project root run the following `grunt` command:
+
+        THEME=my-theme grunt css
+
+4. The output will be available in the `$PROJECT_ROOT/dist`
+
+Again this assumes the theme css files are available in the `css/themes/$THEME/` directory relative to the project root, `css/themes/my-theme/` in the example.
+
+## Development
+
+The root of the repository is also the root of the documentation and, along with the test suite, acts as the test bed for bug fixes and features. You'll need to set up a server and get the test suite running before you can contribute patches.
+
+### Server
+
+Most of the documentation and testing pages rely on PHP 5+, and as a result Apache and PHP are required for development. You can install them using one of the following methods:
+
+* one-click - [MAMP](http://www.mamp.info/en/downloads/index.html) for OSX, [XAMP](http://www.apachefriends.org/en/xampp.html) for OSX/Windows
+* existing web server - eg, `~/Sites` directory on OSX.
+* virtual machine - If [Vagrant](http://vagrantup.com) is installed you can add [this remote/branch](https://github.com/johnbender/jquery-mobile/tree/vagrant) and `vagrant up`
+
+In addition to vanilla Apache the following modules are required:
 
 * Rewrite (mod\_rewrite.so)
 * Expire (mod\_expires.so)
 * Header (mod\_headers.so)
 
-Alternatively, with the addition of async loading, you can use the python simple http server from the project root:
+Once you have your web server setup you can point it at the project directory.
 
-    $ python -m SimpleHTTPServer 8000
+### Testing
 
-And in your browser visit [localhost:8000](http://localhost:8000/tests/unit/core/). NOTE: The docs will not load as they are dependent on the "/js/" includes which require php. For other development work such as unit tests and custom test pages using
+Automated testing forms the backbone of the jQuery Mobile project's QA activities. As a contributor or patch submitter you will be expected to run the test suite for the code your patches affect. Our continuous integration server will address the remainder of the test suite.
 
-    <script data-main="js/jquery.mobile.docs" src="external/requirejs/require.js"></script>
+You can run all the test suites by running the following command:
 
-will allow you to load modules asynchronously without php. Please note that the example above assumes it's inclusion in a page at the root of the directory in which the simple http server was run.
+    grunt test
 
-AMD Support in Development
-==========================
+You can choose to run only a subset of the tests by adding the `--suites` option like:
 
-Please bear in mind that async loading is not supported for production and is primarily used for the project's build process. As a result developers should expect an initial flash of unstyled content, which will not occur when the library is compiled.
+    grunt test --suites=button,slider
 
-If you find dependency bugs when using the async loading support for development please log them in the github issue tracker.
+will only run the tests under `tests/unit/button/` and `tests/unit/slider/`.
 
-Building With A Custom Theme
-============================
-To use a custom theme in your own build, you'll need Make installed. You can find the themes in the CSS/Themes folder.
-To create a new theme:
+You can also specify which versions of jQuery you want to test jQuery Mobile with by using the `--jqueries` option:
 
-1. Copy the `Default` folder from CSS/Themes to a new folder in the same location. The name of the folder will be the
-theme's name. For testing locally, make sure the index.php file is copied as well.
-2. Edit the `jquery.mobile.theme.css` file so it contains your custom fonts and colors.
-3. Once you are done editing your files and saving them, open a terminal.
-4. Navigate to the jQuery-Mobile folder's root.
-5. Run the following command to build jQuery-Mobile (THEME is the name of the folder for your theme from step 1.):
+    grunt test --jqueries=1.8.2,git
 
-    make THEME=YourThemeName
+Additionally, jQuery Mobile's test suite is split between integration and unit tests. Where the unit tests are meant to focus on a single piece of the library (eg, a widget) and the integration tests require multiple pieces of the library to function. You can target either type by including the `--types` option when testing:
 
-6. The compiled files will be located in the "compiled" folder in the root of jQuery-Mobile.
+    grunt test --types=unit
+    grunt test --types=integration
+    grunt test --types=unit,integration # default, equivalent to 'grunt test'

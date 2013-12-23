@@ -6,12 +6,13 @@
 	<title>jQuery Mobile Textinput Test Suite</title>
 
 	<script src="../../../external/requirejs/require.js"></script>
+	<script src="../../../js/requirejs.config.js"></script>
 	<script src="../../../js/jquery.tag.inserter.js"></script>
 	<script src="../../../external/qunit.js"></script>
 	<script src="../../../tests/jquery.testHelper.js"></script>
 	<script>
 		$.testHelper.asyncLoad([
-			[ "jquery.mobile.forms.textinput" ],
+			[ "widgets/forms/textinput"],["widgets/forms/clearButton"],["widgets/forms/autogrow" ],
 			[ "settings.js" ],
 			[ "jquery.mobile.init" ],
 			[ "textinput_core.js" ]
@@ -21,7 +22,7 @@
 	<link rel="stylesheet"  href="../../../css/themes/default/jquery.mobile.css"/>
 	<link rel="stylesheet" href="../../../external/qunit.css"/>
 
-	<script src="../swarminject.js"></script>
+	<script src="../../swarminject.js"></script>
 </head>
 <body>
 
@@ -54,7 +55,18 @@
   </textarea>
   <a href="external.html" id="external">external</a>
 
+  <textarea id="destroycorrectly">Test Value</textarea>
+
   <input type="search" id="search-input">
+
+  <input type="text" id="text-input">
+  
+  <input type="text" data-clear-btn="true" id="text-input-clear-btn">
+
+  <textarea data-clear-btn="true" id="textarea-clear-btn"></textarea>
+
+	<input type="text" id="focus-class-test-for-input"></input>
+	<textarea id="focus-class-test-for-textarea"></textarea>
 </div>
 </body>
 </html>

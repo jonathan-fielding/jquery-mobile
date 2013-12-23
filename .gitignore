@@ -7,9 +7,16 @@ cache/
 combined/
 combine/
 compiled/
+dist/
 tmp/
 *.swp
 .gitignore
 
 # branch preview
 branches
+
+# node build dependencies
+node_modules
+
+# phantom junit output
+build/test-results/
